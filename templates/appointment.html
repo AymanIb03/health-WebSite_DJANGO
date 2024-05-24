@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% block style %}
+.card {
+padding: 30px 40px;
+margin-top: 60px;
+margin-bottom: 60px;
+border: none !important;
+box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
+}
+
+.blue-text {
+color: #00BCD4
+}
+
+.form-control-label {
+margin-bottom: 0
+}
+
+input,
+textarea,
+button {
+padding: 8px 15px;
+border-radius: 5px !important;
+margin: 5px 0px;
+box-sizing: border-box;
+border: 1px solid #ccc;
+font-size: 18px !important;
+font-weight: 300
+}
+
+input:focus,
+textarea:focus {
+-moz-box-shadow: none !important;
+-webkit-box-shadow: none !important;
+box-shadow: none !important;
+border: 1px solid #00BCD4;
+outline-width: 0;
+font-weight: 400
+}
+
+.btn-block {
+text-transform: uppercase;
+font-size: 15px !important;
+font-weight: 400;
+height: 43px;
+cursor: pointer
+}
+
+.btn-block:hover {
+color: #fff !important
+}
+
+button:focus {
+-moz-box-shadow: none !important;
+-webkit-box-shadow: none !important;
+box-shadow: none !important;
+outline-width: 0
+}
+
+{% endblock style %}
+
+{% block content %}
+
+{% if messages %}
+<div class="card notification-card notification-invitation">
+    <div class="card-body">
+        {% for message in messages %}
+        <div class="card-title">{{message}} </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<div class="container-fluid px-1 py-5 mx-auto">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+            <h3>Book an Appointment</h3>
+            <p class="blue-text">Use the following form to contact us and request an appointment.</p>
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                <form class="form-card" method="POST" action="{% url 'appointment' %}">
+                    {% csrf_token %}
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6">
+                            <label for="fname" class="form-control-label px-3">First name<span class="text-danger">
+                                    *</span></label>
+                            <input required type="text" id="fname" name="fname" placeholder="Enter your first name"
+                                class="form-control" onblur="validate(1)">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="lname" class="form-control-label px-3">Last name<span class="text-danger">
+                                    *</span></label>
+                            <input required type="text" id="lname" name="lname" placeholder="Enter your last name"
+                                class="form-control" onblur="validate(2)">
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6">
+                            <label for="email" class="form-control-label px-3">Email<span class="text-danger">
+                                    *</span></label>
+                            <input required type="email" id="email" name="email" placeholder="Enter your email"
+                                class="form-control" onblur="validate(3)">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="mobile" class="form-control-label px-3">Phone number<span class="text-danger">
+                                    *</span></label>
+                            <input required type="tel" id="mob" name="mobile" placeholder="Enter your phone number"
+                                class="form-control" onblur="validate(4)">
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-sm-6">
+                            <label for="service" class="form-control-label px-3">Services<span class="text-danger">*</span></label>
+                            <select id="service" name="service" class="form-control" onblur="validate(6)">
+                                <option value="" disabled selected>Select a service</option>
+                                {% for service in services %}
+                                <option value="{{ service.id }}">{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="hospital" class="form-control-label px-3">Hospitals<span class="text-danger">*</span></label>
+                            <select id="hospital" name="hospital" class="form-control" onblur="validate(8)">
+                                <option value="" disabled selected>Select a hospital</option>
+                                {% for hospital in hospitals %}
+                                <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between text-left">
+                        <div class="form-group col-12">
+                            <label for="request" class="form-control-label px-3">Your request<span class="text-danger">
+                                    *</span></label>
+                            <textarea required id="ans" name="request" placeholder="Enter your request"
+                                class="form-control" onblur="validate(7)"></textarea>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="form-group col-sm-6">
+                            <button type="submit" class="btn btn-primary btn-block">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+function validate(val) {
+v1 = document.getElementById("fname");
+v2 = document.getElementById("lname");
+v3 = document.getElementById("email");
+v4 = document.getElementById("mob");
+v5 = document.getElementById("job");
+v6 = document.getElementById("ans");
+
+flag1 = true;
+flag2 = true;
+flag3 = true;
+flag4 = true;
+flag5 = true;
+flag6 = true;
+
+if(val>=1 || val==0) {
+if(v1.value == "") {
+v1.style.borderColor = "red";
+flag1 = false;
+}
+else {
+v1.style.borderColor = "green";
+flag1 = true;
+}
+}
+
+if(val>=2 || val==0) {
+if(v2.value == "") {
+v2.style.borderColor = "red";
+flag2 = false;
+}
+else {
+v2.style.borderColor = "green";
+flag2 = true;
+}
+}
+if(val>=3 || val==0) {
+if(v3.value == "") {
+v3.style.borderColor = "red";
+flag3 = false;
+}
+else {
+v3.style.borderColor = "green";
+flag3 = true;
+}
+}
+if(val>=4 || val==0) {
+if(v4.value == "") {
+v4.style.borderColor = "red";
+flag4 = false;
+}
+else {
+v4.style.borderColor = "green";
+flag4 = true;
+}
+}
+if(val>=5 || val==0) {
+if(v5.value == "") {
+v5.style.borderColor = "red";
+flag5 = false;
+}
+else {
+v5.style.borderColor = "green";
+flag5 = true;
+}
+}
+if(val>=6 || val==0) {
+if(v6.value == "") {
+v6.style.borderColor = "red";
+flag6 = false;
+}
+else {
+v6.style.borderColor = "green";
+flag6 = true;
+}
+}
+
+flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6;
+
+return flag;
+}
+{% endblock script %}
+
